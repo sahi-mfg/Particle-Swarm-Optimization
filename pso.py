@@ -87,16 +87,15 @@ class PSO:
     def update_personal_best(self):
         """updates the personal best positions and fitness values."""
         self.condition = self.personal_best_fitness > self.fitness
-        for i in range(self.particle):
-            if self.condition[i]:
-                self.personal_best_position = self.position
-                self.personal_best_fitness = self.fitness
+        # seules les particules qui se sont améliorées mettent à jour leur meilleure position
+        self.personal_best_position[self.condition] = self.position[self.condition]
+        self.personal_best_fitness[self.condition] = self.fitness[self.condition]
 
     def update_global_best(self):
         """updates the global best position and fitness value."""
         i = self.personal_best_fitness.argmin()
         if self.global_best_fitness > self.personal_best_fitness[i]:
-            self.global_best_position = self.position[i, :].copy()
+            self.global_best_position = self.personal_best_position[i, :].copy()
             self.global_best_fitness = self.personal_best_fitness[i]
 
     def update_position(self):
